@@ -19,9 +19,9 @@ namespace Runtime.BallScripts
             StartCoroutine(ShootRandomAngleCoroutine());
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            transform.Translate(_movementDirection * (_movementSpeed * Time.deltaTime));
+            transform.Translate(_movementDirection * (_movementSpeed * Time.fixedDeltaTime));
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
