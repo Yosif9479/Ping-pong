@@ -1,24 +1,28 @@
 ﻿using Constants;
 using Enums;
+using Runtime.Basics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Runtime.PlayerScripts
 {
-    public class Player : MonoBehaviour
+    public class Player : RoundRelatedBehaviour
     {
         [Header("Movement")] 
         [SerializeField] private float _movementSpeed = 5f;
 
         [Header("Settings")] 
         [SerializeField] private ControlsType _controlsType;
-        
+
+        public Score Score { get; private set; } = new();
+
         #region INPUT_ACTIONS
         private InputAction _moveAction;
         #endregion
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             InitInputs();
         }
 
