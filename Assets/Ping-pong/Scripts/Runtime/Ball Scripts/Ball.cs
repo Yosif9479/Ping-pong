@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Runtime.Basics;
 using Runtime.PlayerScripts;
 using UnityEngine;
@@ -22,8 +23,8 @@ namespace Runtime.BallScripts
         private AudioSource _audioSource;
         private Vector2 _movementDirection = Vector2.zero;
         private float _currentMovementSpeed;
-        
-        public Player LastHitPlayer { get; private set; }
+
+        public readonly List<Player> HitPlayers = new();
 
         protected override void Awake()
         {
@@ -59,7 +60,7 @@ namespace Runtime.BallScripts
         {
             if (hitCollider.GetComponent<Player>() is Player player)
             {
-                LastHitPlayer = player;
+                HitPlayers.Add(player);
             }
         }
         
@@ -94,8 +95,8 @@ namespace Runtime.BallScripts
             base.Reset();
             
             _movementDirection = Vector2.zero;
-            
-            LastHitPlayer = null;
+
+            HitPlayers.Clear();
 
             Start();
         }

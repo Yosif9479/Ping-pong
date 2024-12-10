@@ -1,14 +1,17 @@
-﻿using Runtime.BallScripts;
+﻿using System.Collections.Generic;
 using Runtime.PlayerScripts;
-using UnityEngine;
+using Runtime.BallScripts;
 using UnityEngine.Events;
+using UnityEngine;
 
 namespace Runtime.GoalScripts
 {
     [RequireComponent(typeof(Collider2D))]
     public class GoalZone : MonoBehaviour
     {
-        public static event UnityAction<Player> GoalReached;
+        public static event UnityAction<List<Player>, Player> GoalReached;
+
+        [SerializeField] private Player _player;
         
         private Collider2D _collider;
 
@@ -24,11 +27,11 @@ namespace Runtime.GoalScripts
             HandleGoal(other);
         }
 
-        private static void HandleGoal(Collider2D enteredCollider)
+        private void HandleGoal(Collider2D enteredCollider)
         {
             if (enteredCollider.GetComponent<Ball>() is Ball ball)
             {
-                GoalReached?.Invoke(ball.LastHitPlayer);
+                GoalReached?.Invoke(ball.HitPlayers, _player);
             }
         }
     }

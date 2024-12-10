@@ -4,5 +4,6 @@
     {
         public const string PrimaryMove = "Move Primary";
         public const string SecondaryMove = "Move Secondary";
+        public const string Pause = "Pause";
     }
 }

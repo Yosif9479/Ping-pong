@@ -3,6 +3,8 @@ using Runtime.Basics;
 using Runtime.GoalScripts;
 using Runtime.PlayerScripts;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace Runtime.SceneContexts
 {
@@ -28,7 +30,7 @@ namespace Runtime.SceneContexts
         {
             GoalHandler.Handled -= OnRoundFinished;
         }
-
+        
         private void OnRoundFinished()
         {
             ResetRoundRelatedObjects();

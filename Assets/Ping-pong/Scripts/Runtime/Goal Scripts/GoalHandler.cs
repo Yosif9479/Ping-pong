@@ -1,4 +1,6 @@
-﻿using Runtime.PlayerScripts;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Runtime.PlayerScripts;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -26,9 +28,12 @@ namespace Runtime.GoalScripts
             GoalZone.GoalReached -= OnGoalReached;
         }
 
-        private void OnGoalReached(Player shooter)
+        private void OnGoalReached(List<Player> hitPlayers, Player zoneOwner)
         {
-            shooter?.Score.Increment();
+            Player player = hitPlayers.LastOrDefault(x => x != zoneOwner);
+            
+            player?.Score.Increment();
+            
             _audioSource.Play();
             Handled?.Invoke();
         }
