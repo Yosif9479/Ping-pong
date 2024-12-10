@@ -23,6 +23,8 @@ namespace Ui.Modules
         private void Awake()
         {
             _pauseAction = InputSystem.actions.FindAction(InputActionNames.Pause);
+
+            Time.timeScale = 1;
         }
 
         private void OnEnable()
