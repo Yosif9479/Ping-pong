@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace Runtime.BallScripts
 {
-    [RequireComponent(typeof(Collider2D))]
+    [RequireComponent(typeof(Collider2D), typeof(AudioSource))]
     public class Ball : RoundRelatedBehaviour
     {
         [Header("Movement")] 
@@ -19,11 +19,17 @@ namespace Runtime.BallScripts
         [Tooltip("Minimal x coordinate on unit circle")]
         [SerializeField] private float _maxShootAngle = 45f;
 
+        private AudioSource _audioSource;
         private Vector2 _movementDirection = Vector2.zero;
-
-        public Player LastHitPlayer { get; private set; }
-        
         private float _currentMovementSpeed;
+        
+        public Player LastHitPlayer { get; private set; }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _audioSource = GetComponent<AudioSource>();
+        }
 
         private void Start()
         {
@@ -38,6 +44,7 @@ namespace Runtime.BallScripts
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            _audioSource.Play();
             InvertDirection(collision.GetContact(0).normal);
             UpdateLastHitPlayer(collision.collider);
             IncrementSpeed();
