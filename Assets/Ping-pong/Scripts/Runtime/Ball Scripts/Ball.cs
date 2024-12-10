@@ -17,7 +17,7 @@ namespace Runtime.BallScripts
         [Header("Settings")] 
         [SerializeField] private float _delaySecondsBeforeShoot = 1f;
         [Tooltip("Minimal x coordinate on unit circle")]
-        [SerializeField] private float _minShootX = 0.5f;
+        [SerializeField] private float _maxShootAngle = 45f;
 
         private Vector2 _movementDirection = Vector2.zero;
 
@@ -67,7 +67,7 @@ namespace Runtime.BallScripts
         {
             yield return new WaitForSeconds(_delaySecondsBeforeShoot);
 
-            float x = Random.Range(_minShootX, 1f);
+            float x = Random.Range(Mathf.Cos(_maxShootAngle), 1f);
 
             if (RandomBool()) x = -x;
 
