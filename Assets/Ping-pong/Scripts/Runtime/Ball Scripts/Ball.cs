@@ -2,7 +2,7 @@
 using Runtime.Basics;
 using Runtime.PlayerScripts;
 using UnityEngine;
-using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace Runtime.BallScripts
 {
@@ -10,36 +10,44 @@ namespace Runtime.BallScripts
     public class Ball : RoundRelatedBehaviour
     {
         [Header("Movement")] 
-        [SerializeField] private float _movementSpeed = 5f;
+        [SerializeField] private float _initialSpeed = 5f;
+        [SerializeField] private float _incrementPerHit = 0.5f;
+        [SerializeField] private float _maxSpeed = 15f;
         
         [Header("Settings")] 
         [SerializeField] private float _delaySecondsBeforeShoot = 1f;
+        [Tooltip("Minimal x coordinate on unit circle")]
+        [SerializeField] private float _minShootX = 0.5f;
 
         private Vector2 _movementDirection = Vector2.zero;
 
         public Player LastHitPlayer { get; private set; }
+        
+        private float _currentMovementSpeed;
 
         private void Start()
         {
+            _currentMovementSpeed = _initialSpeed;
             StartCoroutine(ShootRandomAngleCoroutine());
         }
 
         private void FixedUpdate()
         {
-            transform.Translate(_movementDirection * (_movementSpeed * Time.fixedDeltaTime));
+            transform.Translate(_movementDirection * (_currentMovementSpeed * Time.fixedDeltaTime));
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
             InvertDirection(collision.GetContact(0).normal);
             UpdateLastHitPlayer(collision.collider);
+            IncrementSpeed();
         }
 
         private void InvertDirection(Vector2 collisionNormal)
         {
             _movementDirection = Vector2.Reflect(_movementDirection, collisionNormal);
         }
-
+        
         private void UpdateLastHitPlayer(Collider2D hitCollider)
         {
             if (hitCollider.GetComponent<Player>() is Player player)
@@ -47,14 +55,31 @@ namespace Runtime.BallScripts
                 LastHitPlayer = player;
             }
         }
+        
+        private void IncrementSpeed()
+        {
+            if (_currentMovementSpeed >= _maxSpeed) return;
+            
+            _currentMovementSpeed += _incrementPerHit;
+        }
 
         private IEnumerator ShootRandomAngleCoroutine()
         {
             yield return new WaitForSeconds(_delaySecondsBeforeShoot);
+
+            float x = Random.Range(_minShootX, 1f);
+
+            if (RandomBool()) x = -x;
+
+            float y = Mathf.Sin(Mathf.Acos(x));
             
-            float angle = Random.Range(0f, 360f);
+            if (RandomBool()) y = -y;
             
-            _movementDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            _movementDirection = new Vector2(x, y);
+
+            yield break;
+            
+            bool RandomBool() => Random.Range(0, 2) is 0;
         }
 
         public override void Reset()
