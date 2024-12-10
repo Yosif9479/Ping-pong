@@ -2562,22 +2562,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ball
       objectReference: {fileID: 0}
-    - target: {fileID: 4200465345457210213, guid: 081e27cccc4b00f4c97aaddc64ed80ea, type: 3}
-      propertyPath: _minShootX
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 6634470223437680014, guid: 081e27cccc4b00f4c97aaddc64ed80ea, type: 3}
-      propertyPath: m_Color.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6634470223437680014, guid: 081e27cccc4b00f4c97aaddc64ed80ea, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6634470223437680014, guid: 081e27cccc4b00f4c97aaddc64ed80ea, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
