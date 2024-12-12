@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Runtime.Basics;
 using Runtime.PlayerScripts;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 namespace Runtime.BallScripts
@@ -10,6 +11,8 @@ namespace Runtime.BallScripts
     [RequireComponent(typeof(Collider2D), typeof(AudioSource))]
     public class Ball : RoundRelatedBehaviour
     {
+        public event UnityAction Bounced;
+        
         [Header("Movement")] 
         [SerializeField] private float _initialSpeed = 5f;
         [SerializeField] private float _incrementPerHit = 0.5f;
@@ -25,6 +28,7 @@ namespace Runtime.BallScripts
         private float _currentMovementSpeed;
 
         public readonly List<Player> HitPlayers = new();
+        public Vector2 Velocity { get; private set; }
 
         protected override void Awake()
         {
@@ -41,8 +45,9 @@ namespace Runtime.BallScripts
         private void FixedUpdate()
         {
             transform.Translate(_movementDirection * (_currentMovementSpeed * Time.fixedDeltaTime));
+            UpdateVelocity();
         }
-
+        
         private void OnCollisionEnter2D(Collision2D collision)
         {
             _audioSource.Play();
@@ -54,14 +59,15 @@ namespace Runtime.BallScripts
         private void InvertDirection(Vector2 collisionNormal)
         {
             _movementDirection = Vector2.Reflect(_movementDirection, collisionNormal);
+            UpdateVelocity();
+            Bounced?.Invoke();
         }
         
         private void UpdateLastHitPlayer(Collider2D hitCollider)
         {
-            if (hitCollider.GetComponent<Player>() is Player player)
-            {
-                HitPlayers.Add(player);
-            }
+            if (hitCollider.GetComponent<Player>() is not Player player) return;
+            
+            HitPlayers.Add(player);
         }
         
         private void IncrementSpeed()
@@ -84,12 +90,21 @@ namespace Runtime.BallScripts
             if (RandomBool()) y = -y;
             
             _movementDirection = new Vector2(x, y);
+            
+            UpdateVelocity();
 
+            Bounced?.Invoke();
+            
             yield break;
             
             bool RandomBool() => Random.Range(0, 2) is 0;
         }
 
+        private void UpdateVelocity()
+        {
+            Velocity = _movementDirection * _currentMovementSpeed;
+        }
+        
         public override void Reset()
         {
             base.Reset();

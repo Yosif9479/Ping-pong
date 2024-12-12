@@ -1,20 +1,22 @@
-﻿using Runtime.BallScripts;
+﻿using Enums;
+using Runtime.BallScripts;
 using Runtime.Basics;
 using Runtime.GoalScripts;
 using Runtime.PlayerScripts;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 namespace Runtime.SceneContexts
 {
-    public class GameSceneContext : MonoBehaviour
+    public class GameSceneContext : SceneContextBase<GameSceneContext>
     {
         private RoundRelatedBehaviour[] _roundRelatedObjects;
         private Player[] _players;
         private Ball _ball;
+        
+        public bool PlayBot { get; set; }
+        public BotDifficulty BotDifficulty { get; set; } = BotDifficulty.Impossible;
 
-        private void Awake()
+        protected override void Awake()
         {
             _roundRelatedObjects = FindObjectsByType<RoundRelatedBehaviour>(FindObjectsSortMode.InstanceID);
             _players = FindObjectsByType<Player>(FindObjectsSortMode.InstanceID);

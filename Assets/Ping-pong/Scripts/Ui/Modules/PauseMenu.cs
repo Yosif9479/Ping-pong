@@ -64,7 +64,7 @@ namespace Ui.Modules
         
         public void QuitGame()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+            SceneManager.LoadScene("Menu");
         }
     }
 }

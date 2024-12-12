@@ -12,7 +12,7 @@ namespace Ui.Modules
 
         public void ChooseSolo()
         {
-            UnityEngine.Debug.LogError("Solo game doesn't implemented yet");
+            SceneManager.LoadScene("Game with bot");
         }
     }
 }

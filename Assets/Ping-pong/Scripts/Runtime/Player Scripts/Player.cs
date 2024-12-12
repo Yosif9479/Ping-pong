@@ -15,9 +15,9 @@ namespace Runtime.PlayerScripts
         [Header("Settings")] 
         [SerializeField] private ControlsType _controlsType;
 
-        public Score Score { get; private set; } = new();
+        public Score Score { get; protected set; } = new();
 
-        private Camera _camera;
+        protected Camera MainCamera;
         private SpriteRenderer _spriteRenderer;
         private float _maxY;
         private float _minY;
@@ -30,7 +30,7 @@ namespace Runtime.PlayerScripts
         {
             base.Awake();
             
-            _camera = Camera.main;
+            MainCamera = Camera.main;
             _spriteRenderer = GetComponent<SpriteRenderer>();
             
             InitInputs();
@@ -44,7 +44,7 @@ namespace Runtime.PlayerScripts
 
         private void ApplyMovement()
         {
-            var translation = new Vector2(0, _moveAction.ReadValue<Vector2>().y);
+            var translation = new Vector2(0, GetTargetTranslation().y);
             
             transform.Translate(translation * (_movementSpeed * Time.deltaTime));
 
@@ -53,6 +53,11 @@ namespace Runtime.PlayerScripts
                 x = transform.position.x,
                 y = Mathf.Clamp(transform.position.y, _minY, _maxY),
             };
+        }
+
+        protected virtual Vector2 GetTargetTranslation()
+        {
+            return _moveAction.ReadValue<Vector2>();
         }
 
         private void InitInputs()
@@ -75,8 +80,8 @@ namespace Runtime.PlayerScripts
 
         private void InitMaxYPosition()
         {
-            _maxY = _camera.ScreenToWorldPoint(new Vector2(0, Screen.height)).y - _spriteRenderer.bounds.extents.y;
-            _minY = _camera.ScreenToWorldPoint(new Vector2(0, 0)).y + _spriteRenderer.bounds.extents.y;
+            _maxY = MainCamera.ScreenToWorldPoint(new Vector2(0, Screen.height)).y - _spriteRenderer.bounds.extents.y;
+            _minY = MainCamera.ScreenToWorldPoint(new Vector2(0, 0)).y + _spriteRenderer.bounds.extents.y;
         }
     }
 }
